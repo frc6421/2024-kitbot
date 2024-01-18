@@ -154,7 +154,7 @@ public class SwerveModule implements Sendable{
     steerPosition = new PositionVoltage(0);
     driveVelocity = new VelocityDutyCycle(0);
 
-    Shuffleboard.getTab(moduleName).add(this);
+    Shuffleboard.getTab("SwerveModules").add(moduleName, this);
   }
 
   // @Override

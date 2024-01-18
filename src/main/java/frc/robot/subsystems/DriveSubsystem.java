@@ -26,25 +26,25 @@ public class DriveSubsystem extends SubsystemBase {
     public static final int FRONT_LEFT_MODULE_STEER_CAN_ID = 13;
     public static final int FRONT_LEFT_MODULE_ENCODER_CAN_ID = 13;
     /** Kitbot */
-    public static final double FRONT_LEFT_MODULE_ANGLE_OFFSET = 105.205; //104.237
+    public static final double FRONT_LEFT_MODULE_ROTATION_OFFSET = 0.29223; //104.237
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_CAN_ID = 10;
     public static final int FRONT_RIGHT_MODULE_STEER_CAN_ID = 11;
     public static final int FRONT_RIGHT_MODULE_ENCODER_CAN_ID = 11;
     /** Kitbot */
-    public static final double FRONT_RIGHT_MODULE_ANGLE_OFFSET = 145.459; //145.630 
+    public static final double FRONT_RIGHT_MODULE_ROTATION_OFFSET = 0.40405; //145.630 
 
     public static final int BACK_LEFT_MODULE_DRIVE_CAN_ID = 16;
     public static final int BACK_LEFT_MODULE_STEER_CAN_ID = 17;
     public static final int BACK_LEFT_MODULE_ENCODER_CAN_ID = 17;
     /** Kitbot */
-    public static final double BACK_LEFT_MODULE_ANGLE_OFFSET = -107.051; //-106.435
+    public static final double BACK_LEFT_MODULE_ROTATION_OFFSET = -0.29736; //-106.435
 
     public static final int BACK_RIGHT_MODULE_DRIVE_CAN_ID = 14;
     public static final int BACK_RIGHT_MODULE_STEER_CAN_ID = 15;
     public static final int BACK_RIGHT_MODULE_ENCODER_CAN_ID = 15;
     /** Kitbot */
-    public static final double BACK_RIGHT_MODULE_ANGLE_OFFSET = 114.785; //115.049
+    public static final double BACK_RIGHT_MODULE_ROTATION_OFFSET = 0.31884; //115.049
 
     /**
      * Drivetrain trackwidth from side to side
@@ -113,16 +113,16 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     frontLeft = new SwerveModule("Front Left", DriveConstants.FRONT_LEFT_MODULE_DRIVE_CAN_ID,
         DriveConstants.FRONT_LEFT_MODULE_STEER_CAN_ID, DriveConstants.FRONT_LEFT_MODULE_ENCODER_CAN_ID,
-        DriveConstants.FRONT_LEFT_MODULE_ANGLE_OFFSET);
+        DriveConstants.FRONT_LEFT_MODULE_ROTATION_OFFSET);
     frontRight = new SwerveModule("Front Right", DriveConstants.FRONT_RIGHT_MODULE_DRIVE_CAN_ID,
         DriveConstants.FRONT_RIGHT_MODULE_STEER_CAN_ID, DriveConstants.FRONT_RIGHT_MODULE_ENCODER_CAN_ID,
-        DriveConstants.FRONT_RIGHT_MODULE_ANGLE_OFFSET);
+        DriveConstants.FRONT_RIGHT_MODULE_ROTATION_OFFSET);
     backLeft = new SwerveModule("Back Left", DriveConstants.BACK_LEFT_MODULE_DRIVE_CAN_ID,
         DriveConstants.BACK_LEFT_MODULE_STEER_CAN_ID, DriveConstants.BACK_LEFT_MODULE_ENCODER_CAN_ID,
-        DriveConstants.BACK_LEFT_MODULE_ANGLE_OFFSET);
+        DriveConstants.BACK_LEFT_MODULE_ROTATION_OFFSET);
     backRight = new SwerveModule("Back Right", DriveConstants.BACK_RIGHT_MODULE_DRIVE_CAN_ID,
         DriveConstants.BACK_RIGHT_MODULE_STEER_CAN_ID, DriveConstants.BACK_RIGHT_MODULE_ENCODER_CAN_ID,
-        DriveConstants.BACK_RIGHT_MODULE_ANGLE_OFFSET);
+        DriveConstants.BACK_RIGHT_MODULE_ROTATION_OFFSET);
 
     swerveKinematics = new SwerveDriveKinematics(
         // Front left
