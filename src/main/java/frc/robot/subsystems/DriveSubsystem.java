@@ -26,25 +26,25 @@ public class DriveSubsystem extends SubsystemBase {
     public static final int FRONT_LEFT_MODULE_STEER_CAN_ID = 13;
     public static final int FRONT_LEFT_MODULE_ENCODER_CAN_ID = 13;
     /** Kitbot */
-    public static final double FRONT_LEFT_MODULE_ANGLE_OFFSET = 104.237; //255.847
+    public static final double FRONT_LEFT_MODULE_ANGLE_OFFSET = 105.205; //104.237
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_CAN_ID = 10;
     public static final int FRONT_RIGHT_MODULE_STEER_CAN_ID = 11;
     public static final int FRONT_RIGHT_MODULE_ENCODER_CAN_ID = 11;
     /** Kitbot */
-    public static final double FRONT_RIGHT_MODULE_ANGLE_OFFSET = 145.630; //214.446
+    public static final double FRONT_RIGHT_MODULE_ANGLE_OFFSET = 145.459; //145.630 
 
     public static final int BACK_LEFT_MODULE_DRIVE_CAN_ID = 16;
     public static final int BACK_LEFT_MODULE_STEER_CAN_ID = 17;
     public static final int BACK_LEFT_MODULE_ENCODER_CAN_ID = 17;
     /** Kitbot */
-    public static final double BACK_LEFT_MODULE_ANGLE_OFFSET = -106.435; //106.436
+    public static final double BACK_LEFT_MODULE_ANGLE_OFFSET = -107.051; //-106.435
 
     public static final int BACK_RIGHT_MODULE_DRIVE_CAN_ID = 14;
     public static final int BACK_RIGHT_MODULE_STEER_CAN_ID = 15;
     public static final int BACK_RIGHT_MODULE_ENCODER_CAN_ID = 15;
     /** Kitbot */
-    public static final double BACK_RIGHT_MODULE_ANGLE_OFFSET = 115.049; //245.036
+    public static final double BACK_RIGHT_MODULE_ANGLE_OFFSET = 114.785; //115.049
 
     /**
      * Drivetrain trackwidth from side to side
