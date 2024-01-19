@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -41,9 +42,9 @@ public class SwerveModule implements Sendable{
     public static final double SUPPLY_TIME_THRESHOLD_SEC = 1.0;
     public static final double STATOR_CURRENT_LIMIT_AMPS = 35;
 
-    public static final double STEER_KS = 0.0;
-    public static final double STEER_KV = 0.0;
-    public static final double STEER_KP = 0.0;
+    public static final double STEER_KS = 0.03;
+    public static final double STEER_KV = 0.03;
+    public static final double STEER_KP = 24; // .03, 3, 1.5, 100 
     public static final double STEER_KI = 0.0;
     public static final double STEER_KD = 0.0;
 
@@ -75,6 +76,7 @@ public class SwerveModule implements Sendable{
   private final PositionVoltage steerPosition;
   private final VelocityDutyCycle driveVelocity;
 
+
   /** Creates a new ModuleSubsystem. */
   public SwerveModule(String name, int driveMotorID, int steerMotorID, int steerEncoderID, double rotationOffset) {
     moduleName = name;
@@ -82,7 +84,7 @@ public class SwerveModule implements Sendable{
 
     driveMotor = new TalonFX(driveMotorID, ModuleConstants.RIO_NAME);
     driveMotorConfig = new TalonFXConfiguration();
-    driveMotor.getConfigurator().apply(driveMotorConfig, ModuleConstants.TIMEOUT_mS);
+    driveMotor.getConfigurator().apply(new TalonFXConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     driveMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     driveMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -111,15 +113,17 @@ public class SwerveModule implements Sendable{
     steerEncoder = new CANcoder(steerEncoderID, ModuleConstants.RIO_NAME);
 
     steerEncoderConfig = new CANcoderConfiguration();
-    steerEncoder.getConfigurator().apply(steerEncoderConfig, ModuleConstants.TIMEOUT_mS);
+    steerEncoder.getConfigurator().apply(new CANcoderConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
-    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     steerEncoderConfig.MagnetSensor.MagnetOffset = rotationOffset;
+
+    steerEncoder.getConfigurator().apply(steerEncoderConfig, ModuleConstants.TIMEOUT_mS);
 
     steerMotor = new TalonFX(steerMotorID, ModuleConstants.RIO_NAME);
     steerMotorConfig = new TalonFXConfiguration();
-    steerMotor.getConfigurator().apply(steerMotorConfig, ModuleConstants.TIMEOUT_mS);
+    steerMotor.getConfigurator().apply(new TalonFXConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerMotorConfig.Voltage.PeakForwardVoltage = ModuleConstants.MAX_VOLTAGE;
     steerMotorConfig.Voltage.PeakReverseVoltage = - 1.0 * ModuleConstants.MAX_VOLTAGE;
@@ -146,7 +150,7 @@ public class SwerveModule implements Sendable{
     steerMotorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
 
     steerMotor.getConfigurator().apply(steerMotorConfig, ModuleConstants.TIMEOUT_mS);
-    
+
     Timer.delay(1.0);
     setSteerMotorToAbsolute();
 
@@ -154,7 +158,7 @@ public class SwerveModule implements Sendable{
     steerPosition = new PositionVoltage(0);
     driveVelocity = new VelocityDutyCycle(0);
 
-    Shuffleboard.getTab("SwerveModules").add(moduleName, this);
+    Shuffleboard.getTab("SwerveModules").add(moduleName, this).withSize(3, 2);
   }
 
   // @Override
@@ -215,7 +219,7 @@ public class SwerveModule implements Sendable{
    * @return steer motor's position in rotations
    */
   public double getSteerMotorRotations() {
-    return steerMotor.getPosition().refresh().getValue();
+    return steerEncoder.getAbsolutePosition().refresh().getValue();
   }
 
   public double getSteerMotorDegrees(){
@@ -223,6 +227,10 @@ public class SwerveModule implements Sendable{
   }
 
   // CANCODER METHODS \\
+
+  public double getCANcoderRotation() {
+    return steerEncoder.getAbsolutePosition().refresh().getValue();
+  }
 
   public double getCANcoderAngle() {
     return steerEncoder.getAbsolutePosition().refresh().getValue() * 180;
@@ -308,7 +316,7 @@ public class SwerveModule implements Sendable{
 
     builder.addDoubleProperty("Drive Motor Velocity", this::getDriveMotorVelocity, null);
     builder.addDoubleProperty("Steer Motor Angle", this::getSteerMotorDegrees, null);
-    builder.addDoubleProperty("CANCoder Angle Degrees", this::getCANcoderAngle, null);
+    builder.addDoubleProperty("CANCoder Rotation", this::getCANcoderRotation, null);
     builder.addDoubleProperty("Drive Motor Output", this::getDriveMotorDutyCycle, null);
     builder.addDoubleProperty("Drive Motor Voltage", this::getDriveMotorVoltage, null);
     builder.addDoubleProperty("Drive Motor Distance Meters", this::getDriveMotorDistance, null);
