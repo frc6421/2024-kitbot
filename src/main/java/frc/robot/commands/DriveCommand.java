@@ -116,13 +116,13 @@ public class DriveCommand extends Command {
     // X-lock wheels to prevent pushing and sets the speed of each module to 0
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 &&
         chassisSpeeds.omegaRadiansPerSecond == 0) {
-      swerveModuleStates[0].angle = Rotation2d.fromDegrees(45);
+      swerveModuleStates[0].angle = Rotation2d.fromDegrees(315);
       swerveModuleStates[0].speedMetersPerSecond = 0;
-      swerveModuleStates[1].angle = Rotation2d.fromDegrees(-45);
+      swerveModuleStates[1].angle = Rotation2d.fromDegrees(45);
       swerveModuleStates[1].speedMetersPerSecond = 0;
-      swerveModuleStates[2].angle = Rotation2d.fromDegrees(-45);
+      swerveModuleStates[2].angle = Rotation2d.fromDegrees(45);
       swerveModuleStates[2].speedMetersPerSecond = 0;
-      swerveModuleStates[3].angle = Rotation2d.fromDegrees(45);
+      swerveModuleStates[3].angle = Rotation2d.fromDegrees(315);
       swerveModuleStates[3].speedMetersPerSecond = 0;
     }
 

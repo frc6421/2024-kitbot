@@ -33,7 +33,7 @@ public class SwerveModule implements Sendable{
 
     public static final double DRIVE_KS = 0.0;
     public static final double DRIVE_KV = 0.0;
-    public static final double DRIVE_KP = 0.0;
+    public static final double DRIVE_KP = 3.0;
     public static final double DRIVE_KI = 0.0;
     public static final double DRIVE_KD = 0.0;
 
@@ -44,9 +44,9 @@ public class SwerveModule implements Sendable{
 
     public static final double STEER_KS = 0.03;
     public static final double STEER_KV = 0.03;
-    public static final double STEER_KP = 24; // .03, 3, 1.5, 100 
+    public static final double STEER_KP = 100; // .03, 3, 1.5, 100 
     public static final double STEER_KI = 0.0;
-    public static final double STEER_KD = 0.0;
+    public static final double STEER_KD = 0.2; // 0
 
     public static final double MAX_VOLTAGE = 10;
     public static final double WHEEL_DIAMETER_IN = 3.82;
@@ -209,9 +209,7 @@ public class SwerveModule implements Sendable{
    * 
    */
   public void setSteerMotorToAbsolute() {
-    double currentRotations = steerEncoder.getAbsolutePosition().refresh().getValue();
-    double absolutePosition = currentRotations - rotationOffset;
-    steerMotor.setPosition(absolutePosition);
+    steerMotor.setPosition(steerEncoder.getAbsolutePosition().refresh().getValue());
   }
 
   /**
@@ -320,6 +318,7 @@ public class SwerveModule implements Sendable{
     builder.addDoubleProperty("Drive Motor Output", this::getDriveMotorDutyCycle, null);
     builder.addDoubleProperty("Drive Motor Voltage", this::getDriveMotorVoltage, null);
     builder.addDoubleProperty("Drive Motor Distance Meters", this::getDriveMotorDistance, null);
+    builder.addDoubleProperty("Steer Motor Rotation", this::getSteerMotorRotations,  null);
   }
 
   public void autoSetDesiredState(SwerveModuleState swerveModuleState) {
