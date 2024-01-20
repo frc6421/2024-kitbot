@@ -16,7 +16,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -250,7 +249,7 @@ public class SwerveModule implements Sendable{
    * @return current SwerveModulePosition
    */
   public SwerveModulePosition getModulePosition() {
-    return new SwerveModulePosition(getDriveMotorDistance(), new Rotation2d(getCANcoderRadians()));
+    return new SwerveModulePosition(getDriveMotorDistance(), Rotation2d.fromRotations(getCANcoderRotation()));
   }
 
   /**
@@ -260,7 +259,7 @@ public class SwerveModule implements Sendable{
    */
   public void setTeleopDesiredState(SwerveModuleState desiredState) {
     // Optimize the desired state to avoid spinning modules more than 90 degrees
-    SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(Math.toRadians(getSteerMotorDegrees())));
+    SwerveModuleState state = SwerveModuleState.optimize(desiredState, Rotation2d.fromRotations(getSteerMotorRotations()));
 
     // Calculate percent of max drive velocity
     driveDutyCycle.Output = (state.speedMetersPerSecond / ModuleConstants.MAX_VELOCITY_METERS_PER_SECOND);
@@ -319,10 +318,5 @@ public class SwerveModule implements Sendable{
     builder.addDoubleProperty("Drive Motor Voltage", this::getDriveMotorVoltage, null);
     builder.addDoubleProperty("Drive Motor Distance Meters", this::getDriveMotorDistance, null);
     builder.addDoubleProperty("Steer Motor Rotation", this::getSteerMotorRotations,  null);
-  }
-
-  public void autoSetDesiredState(SwerveModuleState swerveModuleState) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'autoSetDesiredState'");
   }
 }
