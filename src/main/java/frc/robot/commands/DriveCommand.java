@@ -11,6 +11,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.WarriorGyro;
 import frc.robot.subsystems.DriveSubsystem;
@@ -38,6 +40,8 @@ public class DriveCommand extends Command {
 
   private PIDController angleController;
 
+  private ChassisSpeeds chassisSpeedsPrintOut;
+
   /** Creates a new DriveCommand. */
   public DriveCommand(DriveSubsystem drive, DoubleSupplier leftY, DoubleSupplier leftX, DoubleSupplier rightX,
       BooleanSupplier angleA, BooleanSupplier angleB, BooleanSupplier angleX, BooleanSupplier angleY) {
@@ -53,10 +57,14 @@ public class DriveCommand extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
 
+    chassisSpeedsPrintOut = new ChassisSpeeds();
+
     // PID controller for the rotation of the robot
     angleController = new PIDController(DriveConstants.ANGLE_CONTROLLER_KP, 0, 0);
     angleController.enableContinuousInput(-180, 180);
     angleController.setTolerance(2);
+
+    Shuffleboard.getTab("SwerveModules").add(this);
   }
 
   // Called when the command is initially scheduled.
@@ -109,20 +117,22 @@ public class DriveCommand extends Command {
     // Sets chassis speeds
     ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation,
         WarriorGyro.getYawAngle());
+    
+    chassisSpeedsPrintOut = chassisSpeeds;
 
     // Sets field relative speeds to the swerve module states
     var swerveModuleStates = driveSubsystem.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    // X-lock wheels to prevent pushing and sets the speed of each module to 0
+    //X-lock wheels to prevent pushing and sets the speed of each module to 0
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 &&
         chassisSpeeds.omegaRadiansPerSecond == 0) {
-      swerveModuleStates[0].angle = Rotation2d.fromDegrees(315);
+      swerveModuleStates[0].angle = Rotation2d.fromDegrees(-45);
       swerveModuleStates[0].speedMetersPerSecond = 0;
       swerveModuleStates[1].angle = Rotation2d.fromDegrees(45);
       swerveModuleStates[1].speedMetersPerSecond = 0;
       swerveModuleStates[2].angle = Rotation2d.fromDegrees(45);
       swerveModuleStates[2].speedMetersPerSecond = 0;
-      swerveModuleStates[3].angle = Rotation2d.fromDegrees(315);
+      swerveModuleStates[3].angle = Rotation2d.fromDegrees(-45);
       swerveModuleStates[3].speedMetersPerSecond = 0;
     }
 
@@ -140,4 +150,16 @@ public class DriveCommand extends Command {
   public boolean isFinished() {
     return false;
   }
+
+    @Override
+  public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
+    builder.addDoubleProperty("Gyro Degrees", () -> WarriorGyro.getYawAngle().getDegrees(), null);
+    builder.addDoubleProperty("Gyro Rotations", () -> WarriorGyro.getYawAngle().getRotations(), null);
+    builder.addDoubleProperty("Gyro Cos", () -> WarriorGyro.getYawAngle().getCos(), null);
+    builder.addDoubleProperty("Gyro Sin", () -> WarriorGyro.getYawAngle().getSin(), null);
+    builder.addDoubleProperty("Target Angle", () -> targetAngle, null);
+    builder.addDoubleProperty("Chassis Speed", () -> chassisSpeedsPrintOut.omegaRadiansPerSecond, null);
+  }
+
 }

@@ -15,6 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
 import frc.robot.WarriorGyro;
@@ -110,6 +112,9 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter xDriveSlew;
   private SlewRateLimiter yDriveSlew;
 
+  private double ModAngle;
+  private double ModVelocity;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     frontLeft = new SwerveModule("Front Left", DriveConstants.FRONT_LEFT_MODULE_DRIVE_CAN_ID,
@@ -158,6 +163,7 @@ public class DriveSubsystem extends SubsystemBase {
     xDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
     yDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
 
+    Shuffleboard.getTab("Drive Subsystem").add(this);
   }
 
   @Override
@@ -213,6 +219,9 @@ public class DriveSubsystem extends SubsystemBase {
     // Ensures all wheels obey max speed
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
     // Sets the swerve modules to their desired states using optimization method
+
+    ModVelocity = desiredStates[0].speedMetersPerSecond;
+    ModAngle = desiredStates[0].angle.getDegrees();
     frontLeft.setTeleopDesiredState(desiredStates[0]);
     frontRight.setTeleopDesiredState(desiredStates[1]);
     backLeft.setTeleopDesiredState(desiredStates[2]);
@@ -307,4 +316,13 @@ public class DriveSubsystem extends SubsystemBase {
     backLeft.setTeleopDesiredState(swerveModuleStates[2]);
     backRight.setTeleopDesiredState(swerveModuleStates[3]);
   }
+
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    super.initSendable(builder);
+    builder.addDoubleProperty("Mod Velocity", () -> ModVelocity, null);
+    builder.addDoubleProperty("Mod Angle", () -> ModAngle, null);
+  }
+
 }

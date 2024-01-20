@@ -115,7 +115,7 @@ public class SwerveModule implements Sendable{
     steerEncoderConfig = new CANcoderConfiguration();
     steerEncoder.getConfigurator().apply(new CANcoderConfiguration(), ModuleConstants.TIMEOUT_mS);
 
-    steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+    steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     steerEncoderConfig.MagnetSensor.MagnetOffset = rotationOffset;
 
@@ -217,7 +217,7 @@ public class SwerveModule implements Sendable{
    * @return steer motor's position in rotations
    */
   public double getSteerMotorRotations() {
-    return steerEncoder.getAbsolutePosition().refresh().getValue();
+    return steerMotor.getPosition().refresh().getValue();
   }
 
   public double getSteerMotorDegrees(){
@@ -266,7 +266,7 @@ public class SwerveModule implements Sendable{
     driveDutyCycle.Output = (state.speedMetersPerSecond / ModuleConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
     // Calculate steer motor position in rotations
-    steerPosition.Position = state.angle.getDegrees() / 360;
+    steerPosition.Position = state.angle.getRotations();
 
     // if(driverController.povLeft().getAsBoolean()){ 
     //   steerPositionOutput =  (state.angle.getDegrees() + 90 - state.angle.getDegrees() % 360) * DriveConstants.STEER_MOTOR_ENCODER_COUNTS_PER_DEGREE;
