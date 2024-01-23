@@ -75,6 +75,11 @@ public class WarriorGyro {
     return Rotation2d.fromDegrees(pigeon.getYaw().getValue());
   }
 
+  /**
+   * Gets the yaw angle of the gyro
+   * 
+   * @return yaw angle in degrees
+   */
   public static Rotation2d get0to360YawAngle() {
     return Rotation2d.fromDegrees(pigeon.getYaw().getValue());
   }
@@ -91,4 +96,5 @@ public class WarriorGyro {
   public static Rotation2d getRollAngle() {
     return Rotation2d.fromDegrees(pigeon.getRoll().getValue());
   }
+
 }

@@ -69,13 +69,13 @@ public class DriveSubsystem extends SubsystemBase {
     public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
-    public static final int COUNTS_PER_ROTATION = 2048;
+    //public static final int COUNTS_PER_ROTATION = 2048;
 
-    public static final double STEER_MOTOR_ENCODER_COUNTS_PER_DEGREE = (STEER_GEAR_RATIO * COUNTS_PER_ROTATION)
-        / 360;
+    //public static final double STEER_MOTOR_ENCODER_COUNTS_PER_DEGREE = (STEER_GEAR_RATIO * COUNTS_PER_ROTATION)
+    //    / 360;
 
-    public static final double DISTANCE_PER_ENCODER_COUNT = WHEEL_CIRCUMFERENCE
-        / GEAR_RATIO_MOTOR_TO_WHEEL / COUNTS_PER_ROTATION;
+    //public static final double DISTANCE_PER_ENCODER_COUNT = WHEEL_CIRCUMFERENCE
+    //    / GEAR_RATIO_MOTOR_TO_WHEEL / COUNTS_PER_ROTATION;
 
     // Formula for calculating theoretical max velocity:
     // Motor free speed RPM / 60 * Drive reduction * Wheel diameter meters * pi
@@ -112,8 +112,8 @@ public class DriveSubsystem extends SubsystemBase {
   private SlewRateLimiter xDriveSlew;
   private SlewRateLimiter yDriveSlew;
 
-  private double ModAngle;
-  private double ModVelocity;
+  private double modAngle;
+  private double modVelocity;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
@@ -220,8 +220,8 @@ public class DriveSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.MAX_VELOCITY_METERS_PER_SECOND);
     // Sets the swerve modules to their desired states using optimization method
 
-    ModVelocity = desiredStates[0].speedMetersPerSecond;
-    ModAngle = desiredStates[0].angle.getDegrees();
+    modVelocity = desiredStates[0].speedMetersPerSecond;
+    modAngle = desiredStates[0].angle.getDegrees();
     frontLeft.setTeleopDesiredState(desiredStates[0]);
     frontRight.setTeleopDesiredState(desiredStates[1]);
     backLeft.setTeleopDesiredState(desiredStates[2]);
@@ -321,8 +321,8 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-    builder.addDoubleProperty("Mod Velocity", () -> ModVelocity, null);
-    builder.addDoubleProperty("Mod Angle", () -> ModAngle, null);
+    builder.addDoubleProperty("Mod Velocity", () -> modVelocity, null);
+    builder.addDoubleProperty("Mod Angle", () -> modAngle, null);
   }
 
 }

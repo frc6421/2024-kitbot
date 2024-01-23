@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -28,7 +29,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 /** Add your docs here. */
 public class SwerveModule implements Sendable{
   public static class ModuleConstants{
-    public static final String RIO_NAME = "rio";
+    //public static final String RIO_NAME = "rio";
 
     public static final double DRIVE_KS = 0.0;
     public static final double DRIVE_KV = 0.0;
@@ -76,13 +77,14 @@ public class SwerveModule implements Sendable{
   private final VelocityDutyCycle driveVelocity;
 
 
-  /** Creates a new ModuleSubsystem. */
+  /** Creates a new SwerveModule */
   public SwerveModule(String name, int driveMotorID, int steerMotorID, int steerEncoderID, double rotationOffset) {
     moduleName = name;
     this.rotationOffset = rotationOffset;
 
-    driveMotor = new TalonFX(driveMotorID, ModuleConstants.RIO_NAME);
+    driveMotor = new TalonFX(driveMotorID);
     driveMotorConfig = new TalonFXConfiguration();
+    // Reset factory defaults
     driveMotor.getConfigurator().apply(new TalonFXConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     driveMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -109,9 +111,10 @@ public class SwerveModule implements Sendable{
 
     driveMotor.getConfigurator().apply(driveMotorConfig, ModuleConstants.TIMEOUT_mS);
 
-    steerEncoder = new CANcoder(steerEncoderID, ModuleConstants.RIO_NAME);
+    steerEncoder = new CANcoder(steerEncoderID);
 
     steerEncoderConfig = new CANcoderConfiguration();
+    // Reset factory defaults
     steerEncoder.getConfigurator().apply(new CANcoderConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
@@ -120,17 +123,22 @@ public class SwerveModule implements Sendable{
 
     steerEncoder.getConfigurator().apply(steerEncoderConfig, ModuleConstants.TIMEOUT_mS);
 
-    steerMotor = new TalonFX(steerMotorID, ModuleConstants.RIO_NAME);
+    steerMotor = new TalonFX(steerMotorID);
     steerMotorConfig = new TalonFXConfiguration();
+    // Reset factory defaults
     steerMotor.getConfigurator().apply(new TalonFXConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerMotorConfig.Voltage.PeakForwardVoltage = ModuleConstants.MAX_VOLTAGE;
-    steerMotorConfig.Voltage.PeakReverseVoltage = - 1.0 * ModuleConstants.MAX_VOLTAGE;
+    steerMotorConfig.Voltage.PeakReverseVoltage = -1.0 * ModuleConstants.MAX_VOLTAGE;
 
     steerMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     steerMotorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     steerMotorConfig.Feedback.SensorToMechanismRatio = ModuleConstants.STEER_GEAR_RATIO;
+
+    // Sets steer motor encoder to update based on the values from the CANcoder
+    steerMotorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    steerMotorConfig.Feedback.FeedbackRemoteSensorID = steerEncoder.getDeviceID();
 
     steerMotorConfig.ClosedLoopGeneral.ContinuousWrap = true;
 
@@ -159,11 +167,6 @@ public class SwerveModule implements Sendable{
 
     Shuffleboard.getTab("SwerveModules").add(moduleName, this).withSize(3, 2);
   }
-
-  // @Override
-  // public void periodic() {
-  //   // This method will be called once per scheduler run
-  // }
 
   // DRIVE MOTOR METHODS \\
 
@@ -223,6 +226,7 @@ public class SwerveModule implements Sendable{
     return getSteerMotorRotations() * 360;
   }
 
+
   // CANCODER METHODS \\
 
   public double getCANcoderRotation() {
@@ -240,6 +244,8 @@ public class SwerveModule implements Sendable{
   public double getCANcoderRadians() {
     return Math.toRadians(getCANcoderAngle());
   }
+
+  // OTHER METHODS \\
 
   /**
    * Gets the module position based on distance traveled in meters for drive motor
