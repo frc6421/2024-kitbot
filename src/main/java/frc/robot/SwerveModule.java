@@ -118,7 +118,7 @@ public class SwerveModule implements Sendable{
     steerEncoder.getConfigurator().apply(new CANcoderConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     steerEncoderConfig.MagnetSensor.MagnetOffset = rotationOffset;
 
     steerEncoder.getConfigurator().apply(steerEncoderConfig, ModuleConstants.TIMEOUT_mS);
@@ -175,8 +175,7 @@ public class SwerveModule implements Sendable{
   }
 
   /**
-   * Returns the drive motor velocity using encoder counts
-   * Not currently used
+   * Returns the drive motor velocity
    * 
    * @return drive motor velocity in meters per second
    */
@@ -256,6 +255,15 @@ public class SwerveModule implements Sendable{
    */
   public SwerveModulePosition getModulePosition() {
     return new SwerveModulePosition(getDriveMotorDistance(), Rotation2d.fromRotations(getCANcoderRotation()));
+  }
+
+  /**
+   * Gets the module state using the drive motor velocity (m/s) and CANcoder rotation (radians)
+   * 
+   * @return current SwerveModuleState
+   */
+  public SwerveModuleState getModuleState() {
+    return new SwerveModuleState(getDriveMotorVelocity(), new Rotation2d(getCANcoderRadians()));
   }
 
   /**

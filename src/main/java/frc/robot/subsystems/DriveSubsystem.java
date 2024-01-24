@@ -15,7 +15,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveModule;
@@ -115,6 +118,9 @@ public class DriveSubsystem extends SubsystemBase {
   private double modAngle;
   private double modVelocity;
 
+  private SwerveModuleState[] loggedStates;
+  StructArrayPublisher<SwerveModuleState> publisher;
+
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
     frontLeft = new SwerveModule("Front Left", DriveConstants.FRONT_LEFT_MODULE_DRIVE_CAN_ID,
@@ -163,6 +169,16 @@ public class DriveSubsystem extends SubsystemBase {
     xDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
     yDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
 
+    loggedStates = new SwerveModuleState[] {
+      frontLeft.getModuleState(),
+      frontRight.getModuleState(),
+      backLeft.getModuleState(),
+      backRight.getModuleState()
+    };
+
+    publisher = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("Logged SwerveModuleStates", SwerveModuleState.struct).publish();
+
     Shuffleboard.getTab("Drive Subsystem").add(this);
   }
 
@@ -175,6 +191,8 @@ public class DriveSubsystem extends SubsystemBase {
         backLeft.getModulePosition(),
         backRight.getModulePosition()
     });
+
+    publisher.set(loggedStates);
   }
 
   // ODOMETRY METHODS \\
@@ -321,8 +339,8 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-    builder.addDoubleProperty("Mod Velocity", () -> modVelocity, null);
-    builder.addDoubleProperty("Mod Angle", () -> modAngle, null);
+    builder.addDoubleProperty("Module Velocity", () -> modVelocity, null);
+    builder.addDoubleProperty("Module Angle", () -> modAngle, null);
   }
 
 }

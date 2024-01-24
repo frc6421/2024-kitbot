@@ -10,8 +10,10 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.WarriorGyro;
@@ -70,6 +72,8 @@ public class DriveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DataLogManager.getLog().resume();
+    DataLogManager.log("Start Drive Command");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -121,7 +125,7 @@ public class DriveCommand extends Command {
     chassisSpeedsPrintOut = chassisSpeeds;
 
     // Sets field relative speeds to the swerve module states
-    var swerveModuleStates = driveSubsystem.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
+    var swerveModuleStates = driveSubsystem.swerveKinematics.toSwerveModuleStates(chassisSpeeds, new Translation2d(0, 0));
 
     //X-lock wheels to prevent pushing and sets the speed of each module to 0
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 &&
@@ -154,10 +158,10 @@ public class DriveCommand extends Command {
     @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-    builder.addDoubleProperty("Gyro Degrees", () -> WarriorGyro.getYawAngle().getDegrees(), null);
-    builder.addDoubleProperty("Gyro Rotations", () -> WarriorGyro.getYawAngle().getRotations(), null);
-    builder.addDoubleProperty("Gyro Cos", () -> WarriorGyro.getYawAngle().getCos(), null);
-    builder.addDoubleProperty("Gyro Sin", () -> WarriorGyro.getYawAngle().getSin(), null);
+    // builder.addDoubleProperty("Gyro Degrees", () -> WarriorGyro.getYawAngle().getDegrees(), null);
+    // builder.addDoubleProperty("Gyro Rotations", () -> WarriorGyro.getYawAngle().getRotations(), null);
+    // builder.addDoubleProperty("Gyro Cos", () -> WarriorGyro.getYawAngle().getCos(), null);
+    // builder.addDoubleProperty("Gyro Sin", () -> WarriorGyro.getYawAngle().getSin(), null);
     builder.addDoubleProperty("Target Angle", () -> targetAngle, null);
     builder.addDoubleProperty("Chassis Speed", () -> chassisSpeedsPrintOut.omegaRadiansPerSecond, null);
   }
