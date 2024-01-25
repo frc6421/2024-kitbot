@@ -118,7 +118,7 @@ public class SwerveModule implements Sendable{
     steerEncoder.getConfigurator().apply(new CANcoderConfiguration(), ModuleConstants.TIMEOUT_mS);
 
     steerEncoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    steerEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
     steerEncoderConfig.MagnetSensor.MagnetOffset = rotationOffset;
 
     steerEncoder.getConfigurator().apply(steerEncoderConfig, ModuleConstants.TIMEOUT_mS);

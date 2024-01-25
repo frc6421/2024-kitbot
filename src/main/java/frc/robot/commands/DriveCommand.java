@@ -125,7 +125,7 @@ public class DriveCommand extends Command {
     chassisSpeedsPrintOut = chassisSpeeds;
 
     // Sets field relative speeds to the swerve module states
-    var swerveModuleStates = driveSubsystem.swerveKinematics.toSwerveModuleStates(chassisSpeeds, new Translation2d(0, 0));
+    var swerveModuleStates = driveSubsystem.swerveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     //X-lock wheels to prevent pushing and sets the speed of each module to 0
     if (chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 &&
@@ -138,7 +138,7 @@ public class DriveCommand extends Command {
       swerveModuleStates[2].speedMetersPerSecond = 0;
       swerveModuleStates[3].angle = Rotation2d.fromDegrees(-45);
       swerveModuleStates[3].speedMetersPerSecond = 0;
-    }
+    } 
 
     // Sets the swerve modules to their desired states using optimization method
     driveSubsystem.setTeleopModuleStates(swerveModuleStates);
