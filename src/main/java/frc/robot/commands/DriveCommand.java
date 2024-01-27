@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.WarriorGyro;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.DriveSubsystem.DriveConstants;
 
 public class DriveCommand extends Command {
   private DriveSubsystem driveSubsystem;
@@ -41,8 +42,8 @@ public class DriveCommand extends Command {
   private double currentAngle;
   private double targetAngle;
 
-  private double maxSpeed = 1;
-  private double maxAngularRate = 1;
+  private double maxSpeed = DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC;
+  private double maxAngularRate = 2 * Math.PI;
 
   private PIDController angleController;
 
@@ -140,9 +141,9 @@ public class DriveCommand extends Command {
     rotation = MathUtil.clamp(rotation, -2 * Math.PI, 2 * Math.PI);
 
     driveSubsystem.setControl(
-        driveRequest.withVelocityX(-xSpeed)
-        .withVelocityY(-ySpeed)
-        .withRotationalRate(-rotation));
+        driveRequest.withVelocityX(-xSpeed * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC)
+        .withVelocityY(-ySpeed * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC)
+        .withRotationalRate(-rotation * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC));
 
     // Sets chassis speeds
     // ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rotation,
@@ -168,7 +169,7 @@ public class DriveCommand extends Command {
     return false;
   }
 
-    @Override
+  @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
     // builder.addDoubleProperty("Gyro Degrees", () -> WarriorGyro.getYawAngle().getDegrees(), null);
