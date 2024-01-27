@@ -86,8 +86,6 @@ public class DriveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    DataLogManager.getLog().resume();
-    DataLogManager.log("Start Drive Command");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
