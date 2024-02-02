@@ -43,14 +43,7 @@ public class RobotContainer {
 
     driverController = new CommandXboxController(0);
 
-    driveSubsystem.setDefaultCommand(new DriveCommand(driveSubsystem,
-      () -> driverController.getLeftY() * driveNerf,
-      () -> driverController.getLeftX() * driveNerf,
-      () -> driverController.getRightX() * steerNerf,
-      () -> driverController.a().getAsBoolean(),
-      () -> driverController.b().getAsBoolean(),
-      () -> driverController.x().getAsBoolean(),
-      () -> driverController.y().getAsBoolean()));
+    driveSubsystem.setDefaultCommand(new DriveCommand(driveSubsystem, driverController));
 
     // Configure the trigger bindings
     configureBindings();
