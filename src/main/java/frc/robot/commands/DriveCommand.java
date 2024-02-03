@@ -9,6 +9,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.DriveSubsystem;
@@ -27,6 +28,9 @@ public class DriveCommand extends Command {
 
   private final SwerveRequest.FieldCentric driveRequest; 
 
+  private SlewRateLimiter xDriveSlew;
+  private SlewRateLimiter yDriveSlew;
+
   /** Creates a new DriveCommand. */
   public DriveCommand(DriveSubsystem drive, CommandXboxController controller) {
 
@@ -39,6 +43,8 @@ public class DriveCommand extends Command {
         .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
         .withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
+    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(driveSubsystem);
 
@@ -47,15 +53,22 @@ public class DriveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+        xDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
+        yDriveSlew = new SlewRateLimiter(DriveConstants.DRIVE_SLEW_RATE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double xSpeed;
+    double ySpeed;
+
+    xSpeed = xDriveSlew.calculate(-driverController.getLeftY() * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC);
+    ySpeed = yDriveSlew.calculate(-driverController.getLeftX() * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC);
 
     driveSubsystem.setControl(
-        driveRequest.withVelocityX(-driverController.getLeftY() * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC)
-        .withVelocityY(-driverController.getLeftX() * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC)
+        driveRequest.withVelocityX(xSpeed)
+        .withVelocityY(ySpeed)
         .withRotationalRate(-driverController.getRightX() * DriveConstants.SPEED_AT_12_VOLTS_METERS_PER_SEC));
   }
 

@@ -148,6 +148,7 @@ public class DriveSubsystem extends SwerveDrivetrain implements Subsystem {
     private static final SwerveModuleConstants backRight = constantCreator.createModuleConstants(
         BACK_RIGHT_STEER_MOTOR_CAN_ID, BACK_RIGHT_DRIVE_MOTOR_CAN_ID, BACK_RIGHT_CANCODER_CAN_ID, BACK_RIGHT_ENCODER_OFFSET,
         Units.inchesToMeters(BACK_RIGHT_X_POS_INCHES), Units.inchesToMeters(BACK_RIGHT_Y_POS_INCHES), INVERT_RIGHT_SIDE);
+    public static final double DRIVE_SLEW_RATE = 7.5;
   }
 
   public DriveSubsystem() {
