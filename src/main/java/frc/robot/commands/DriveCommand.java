@@ -13,11 +13,11 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.WarriorGyro;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.DriveSubsystem.DriveConstants;
 
@@ -109,7 +109,7 @@ public class DriveCommand extends Command {
     // xSpeed = -1 * (xSpeedInput) * DriveConstants.MAX_VELOCITY_METERS_PER_SECOND;
     // ySpeed = -1 * (ySpeedInput) * DriveConstants.MAX_VELOCITY_METERS_PER_SECOND;
 
-    currentAngle = WarriorGyro.getYawAngle().getDegrees();
+    currentAngle = 0;
 
     if (angleSupplierA.getAsBoolean()) {
       targetAngle = 180;
@@ -129,7 +129,7 @@ public class DriveCommand extends Command {
     }
 
     if (targetAngle != currentAngle) {
-      rotation = angleController.calculate(WarriorGyro.getYawAngle().getDegrees(), targetAngle);
+      rotation = angleController.calculate(0, targetAngle);
     } else {
     //   rotation = -1 * Math.signum(rotationInput) * (rotationInput * rotationInput)
     //       * DriveConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;

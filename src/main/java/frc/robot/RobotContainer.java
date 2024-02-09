@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.AutoTestCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -26,6 +27,7 @@ public class RobotContainer {
   DriveSubsystem driveSubsystem;
   IntakeSubsystem intakeSubsystem;
   // Commands \\
+  AutoTestCommand testAuto;
   
   // Controllers \\
   CommandXboxController driverController;
@@ -36,21 +38,23 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    new WarriorGyro();
+    
     
     driveSubsystem = new DriveSubsystem();
     intakeSubsystem = new IntakeSubsystem();
 
     driverController = new CommandXboxController(0);
 
-    driveSubsystem.setDefaultCommand(new DriveCommand(driveSubsystem,
-      () -> driverController.getLeftY() * driveNerf,
-      () -> driverController.getLeftX() * driveNerf,
-      () -> driverController.getRightX() * steerNerf,
-      () -> driverController.a().getAsBoolean(),
-      () -> driverController.b().getAsBoolean(),
-      () -> driverController.x().getAsBoolean(),
-      () -> driverController.y().getAsBoolean()));
+    // driveSubsystem.setDefaultCommand(new DriveCommand(driveSubsystem,
+    //   () -> driverController.getLeftY() * driveNerf,
+    //   () -> driverController.getLeftX() * driveNerf,
+    //   () -> driverController.getRightX() * steerNerf,
+    //   () -> driverController.a().getAsBoolean(),
+    //   () -> driverController.b().getAsBoolean(),
+    //   () -> driverController.x().getAsBoolean(),
+    //   () -> driverController.y().getAsBoolean()));
+
+    testAuto = new AutoTestCommand(driveSubsystem);
 
     // Configure the trigger bindings
     configureBindings();
@@ -77,6 +81,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return testAuto;
   }
 }
