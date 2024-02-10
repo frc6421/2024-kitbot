@@ -70,8 +70,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    driverController.leftBumper().whileTrue(new InstantCommand(() -> intakeSubsystem.setIntakeMotorInput(IntakeConstants.INTAKE_IN_SPEED)));
-    driverController.leftBumper().whileFalse(new InstantCommand(() -> intakeSubsystem.stopIntakeMotor()));
+    driverController.leftBumper().whileTrue(new InstantCommand(() -> intakeSubsystem.setIntakeSpeed(IntakeConstants.INTAKE_IN_SPEED)));
+    driverController.leftBumper().whileFalse(new InstantCommand(() -> intakeSubsystem.stopIntake()));
   }
 
   /**

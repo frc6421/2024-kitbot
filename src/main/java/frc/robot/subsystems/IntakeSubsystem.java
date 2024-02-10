@@ -4,53 +4,58 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
+  public static class IntakeConstants {
+    public static final int INTAKE_MOTOR_CAN_ID = 20;
 
-  public static class IntakeConstants{
-    public static int INTAKE_TOP_MOTOR_CAN_ID = 30;
-    public static int INTAKE_BOTTOM_MOTOR_CAN_ID = 31;
+    public static final int INTAKE_MOTOR_GEAR_RATIO = 1;
 
-    public static double INTAKE_IN_SPEED = 0.8;
-    public static double INTAKE_OUT_SPEED = -0.8;
+    //Current Limit
+    public static final int INTAKE_STATOR_CURRENT_LIMIT = 80;
+
+    public static final double INTAKE_IN_SPEED = 0.85;
+
+    //TODO verify on actual robot
+    public static final double INTAKE_OUT_SPEED = -0.85;
   }
 
-  private VictorSPX intakeTop;
-  private VictorSPX intakeBottom;
-  private Double percent = 0.0;
+  private CANSparkMax intakeMotor;
+
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
-    intakeTop = new VictorSPX(IntakeConstants.INTAKE_TOP_MOTOR_CAN_ID);
-    intakeBottom = new VictorSPX(IntakeConstants.INTAKE_BOTTOM_MOTOR_CAN_ID);
+    intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_CAN_ID, MotorType.kBrushless);
 
-    Shuffleboard.getTab("Intake Subsystem").add(this);
-  }
+    //Factory defaults
+    intakeMotor.restoreFactoryDefaults();
 
-  public void setIntakeMotorInput(double value) {
-    intakeTop.set(ControlMode.PercentOutput, -value);
-    intakeBottom.set(ControlMode.PercentOutput, -value);
-  }
-
-  public void stopIntakeMotor() {
-    intakeTop.set(ControlMode.PercentOutput, 0);
-    intakeBottom.set(ControlMode.PercentOutput, 0);
-  }
-
-  public void initsendable(SendableBuilder builder) {
-    super.initSendable(builder);
+    // Set Current Limits
+    intakeMotor.setSmartCurrentLimit(IntakeConstants.INTAKE_STATOR_CURRENT_LIMIT);
     
-    //add values to sendable
-    builder.addDoubleProperty("Current % Output", () -> percent, null);
+    intakeMotor.setInverted(true);
+  }
+
+  /** Sets the intakeMotor output
+   * @param value output to apply
+   */
+  public void setIntakeSpeed(double value) {
+    intakeMotor.set(value);
+  }
+
+  /**
+   * Stops the intakeMotor
+   */
+  public void stopIntake() {
+    intakeMotor.stopMotor();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+  //TODO Sendable
 }

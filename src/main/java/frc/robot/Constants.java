@@ -52,14 +52,27 @@ public static class TrajectoryConstants {
 
     public static final Translation2d ORIGIN = new Translation2d(0, 0);
 
-    public static final Translation2d PODIUM = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(161.62));
+    public static final Translation2d PODIUM = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(161.5));
 
-    public static final Translation2d ONE_PIECE_START = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(100)); // THIS IS A COMPLETE GUESS
+    public static final Translation2d TEST_START = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0)); 
+    public static final Translation2d TEST_END = new Translation2d(Units.inchesToMeters(36), Units.inchesToMeters(0)); 
 
-    public static final Translation2d ONE_PIECE_SHOOT = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(100)); // I DONT ACTUALLY KNOW THESE DIMENSIONS (PLS CAD)
+    public static final Translation2d NOTE1 = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(161.5));
+    public static final Translation2d NOTE2 = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(218.5));
+    public static final Translation2d NOTE3 = new Translation2d(Units.inchesToMeters(114), Units.inchesToMeters(275.5));
 
-    public static final Translation2d TEST_START = new Translation2d(Units.inchesToMeters(0), Units.inchesToMeters(0)); // I DONT ACTUALLY KNOW THESE DIMENSIONS (PLS CAD)
-    public static final Translation2d TEST_END = new Translation2d(Units.inchesToMeters(36), Units.inchesToMeters(0)); // I DONT ACTUALLY KNOW THESE DIMENSIONS (PLS CAD)
+    public static final Translation2d NOTE4 = new Translation2d(Units.inchesToMeters(325), Units.inchesToMeters(30.5));
+    public static final Translation2d NOTE5 = new Translation2d(Units.inchesToMeters(325), Units.inchesToMeters(95.5));
+    public static final Translation2d NOTE6 = new Translation2d(Units.inchesToMeters(325), Units.inchesToMeters(161.5));
+    public static final Translation2d NOTE7 = new Translation2d(Units.inchesToMeters(325), Units.inchesToMeters(227.5));
+    public static final Translation2d NOTE8 = new Translation2d(Units.inchesToMeters(325), Units.inchesToMeters(293.5));
+
+    public static final Translation2d NOTE9 = new Translation2d(Units.inchesToMeters(537), Units.inchesToMeters(161.5));
+    public static final Translation2d NOTE10 = new Translation2d(Units.inchesToMeters(537), Units.inchesToMeters(218.5));
+    public static final Translation2d NOTE11 = new Translation2d(Units.inchesToMeters(537), Units.inchesToMeters(275.5));
+
+    public static final Translation2d FRONT_CENTER_BLUE_SUBWOOFER = new Translation2d(Units.inchesToMeters(36), Units.inchesToMeters(218.5));
+    public static final Translation2d FRONT_CENTER_RED_SUBWOOFER = new Translation2d(Units.inchesToMeters(615), Units.inchesToMeters(218.5));
 
   }
 }
