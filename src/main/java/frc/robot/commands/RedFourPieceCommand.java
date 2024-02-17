@@ -32,13 +32,13 @@ import frc.robot.subsystems.IntakeSubsystem.IntakeConstants;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BlueTwoPieceCommand extends SequentialCommandGroup {
+public class RedFourPieceCommand extends SequentialCommandGroup {
   private DriveSubsystem driveSubsystem;
   private IntakeSubsystem intakeSubsystem;
 
-  // private Field2d field;
+   private Field2d field;
   /** Creates a new BlueTwoPieceCommand. */
-  public BlueTwoPieceCommand(DriveSubsystem drive, IntakeSubsystem intake) {
+  public RedFourPieceCommand(DriveSubsystem drive, IntakeSubsystem intake) {
 
     driveSubsystem = drive;
     intakeSubsystem = intake;
@@ -57,19 +57,29 @@ public class BlueTwoPieceCommand extends SequentialCommandGroup {
 
     // robot leaves start zone and moves to pick up note at podium
     Trajectory driveToFirstNoteTrajectory = TrajectoryGenerator.generateTrajectory(List.of(
-        new Pose2d(TrajectoryConstants.FRONT_CENTER_BLUE_SUBWOOFER, new Rotation2d(0)),
-        new Pose2d(TrajectoryConstants.NOTE2, new Rotation2d(0))), forwardConfig);
+        new Pose2d(TrajectoryConstants.FRONT_CENTER_RED_SUBWOOFER, new Rotation2d(0)),
+        new Pose2d(TrajectoryConstants.NOTE9, new Rotation2d(0))), reverseConfig);
+
+    Trajectory driveToSecondNoteTrajectory = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(TrajectoryConstants.NOTE9, new Rotation2d(0)),
+        new Pose2d(TrajectoryConstants.NOTE10, new Rotation2d(0))), reverseConfig);
+
+    Trajectory driveToThirdNoteTrajectory = TrajectoryGenerator.generateTrajectory(List.of(
+        new Pose2d(TrajectoryConstants.NOTE10, new Rotation2d(0)),
+        new Pose2d(TrajectoryConstants.NOTE11, new Rotation2d(0))), reverseConfig);
 
     // Simulation
-    // field = new Field2d();
+     field = new Field2d();
 
-    // if (RobotBase.isSimulation()) {
-       // SmartDashboard.putData(field);
+     if (RobotBase.isSimulation()) {
+        SmartDashboard.putData(field);
 
-       // field.setRobotPose(driveToPodiumTrajectory.getInitialPose());
+        field.setRobotPose(driveToFirstNoteTrajectory.getInitialPose());
       
-       // field.getObject("Drive to Podium Trajectory").setTrajectory(driveToPodiumTrajectory);
-     // }
+        field.getObject("Drive to first Trajectory").setTrajectory(driveToFirstNoteTrajectory);
+        field.getObject("Drive to second Trajectory").setTrajectory(driveToSecondNoteTrajectory);
+        field.getObject("Drive to third Trajectory").setTrajectory(driveToThirdNoteTrajectory);
+      }
 
     var thetaController = new ProfiledPIDController(
         AutoConstants.THETA_P, AutoConstants.THETA_I, AutoConstants.THETA_D,
@@ -91,15 +101,32 @@ public class BlueTwoPieceCommand extends SequentialCommandGroup {
         driveSubsystem::autoSetModuleStates,
         driveSubsystem);
 
+    SwerveControllerCommand driveToSecondNoteCommand = new SwerveControllerCommand(
+        driveToSecondNoteTrajectory,
+        driveSubsystem::getPose2d,
+        driveSubsystem.kinematics,
+        holonomicDriveController,
+        driveSubsystem::autoSetModuleStates,
+        driveSubsystem);
+
+    SwerveControllerCommand driveToThirdNoteCommand = new SwerveControllerCommand(
+        driveToThirdNoteTrajectory,
+        driveSubsystem::getPose2d,
+        driveSubsystem.kinematics,
+        holonomicDriveController,
+        driveSubsystem::autoSetModuleStates,
+        driveSubsystem);
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new InstantCommand(() -> driveSubsystem.tareEverything()), 
       // score pre-loaded piece 
-      new InstantCommand(() -> intakeSubsystem.setIntakeSpeed(IntakeConstants.INTAKE_IN_SPEED)),
-      driveToFirstNoteCommand, 
-      new InstantCommand(() -> driveSubsystem.setControl(new SwerveRequest.ApplyChassisSpeeds()))
+      new InstantCommand(() -> intakeSubsystem.setIntakeSpeed(IntakeConstants.INTAKE_IN_SPEED)), 
+      driveToFirstNoteCommand,
+      new InstantCommand(() -> driveSubsystem.setControl(new SwerveRequest.ApplyChassisSpeeds())),
       // stop intake and score second piece
+      driveToSecondNoteCommand,
+      driveToThirdNoteCommand
     );
   }
 }

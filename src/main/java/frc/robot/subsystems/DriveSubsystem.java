@@ -77,7 +77,7 @@ public class DriveSubsystem extends SwerveDrivetrain implements Subsystem {
     private static final boolean INVERT_LEFT_SIDE = false;
     private static final boolean INVERT_RIGHT_SIDE = true;
 
-    private static final int PIGEON_CAN_ID = 30;
+    private static final int PIGEON_CAN_ID = 18;
 
     // These are only used for simulation
     private static final double STEER_INERTIA = 0.00001;

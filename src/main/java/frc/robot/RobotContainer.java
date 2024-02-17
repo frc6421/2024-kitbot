@@ -5,7 +5,11 @@
 package frc.robot;
 
 import frc.robot.commands.AutoTestCommand;
+import frc.robot.commands.BlueCenterLineThreePieceCommand;
+import frc.robot.commands.BlueFourPieceCommand;
+import frc.robot.commands.BlueTwoPieceCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.RedTwoPieceCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.IntakeSubsystem.IntakeConstants;
@@ -28,6 +32,10 @@ public class RobotContainer {
   IntakeSubsystem intakeSubsystem;
   // Commands \\
   AutoTestCommand testAuto;
+  BlueTwoPieceCommand blueTwoPiece;
+  RedTwoPieceCommand redTwoPiece;
+  BlueFourPieceCommand blueFourPiece;
+  BlueCenterLineThreePieceCommand blueCenterLineThreePiece;
   
   // Controllers \\
   CommandXboxController driverController;
@@ -55,6 +63,10 @@ public class RobotContainer {
     //   () -> driverController.y().getAsBoolean()));
 
     testAuto = new AutoTestCommand(driveSubsystem);
+    blueTwoPiece = new BlueTwoPieceCommand(driveSubsystem, intakeSubsystem);
+    redTwoPiece = new RedTwoPieceCommand(driveSubsystem, intakeSubsystem);
+    blueFourPiece = new BlueFourPieceCommand(driveSubsystem, intakeSubsystem);
+    blueCenterLineThreePiece = new BlueCenterLineThreePieceCommand(driveSubsystem, intakeSubsystem);
 
     // Configure the trigger bindings
     configureBindings();

@@ -1,0 +1,48 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "Drive to first Trajectory": {
+          "arrows": false,
+          "style": "Line",
+          "weight": 1.0
+        },
+        "Drive to score one Trajectory": {
+          "arrows": false,
+          "style": "Line"
+        },
+        "Drive to score two Trajectory": {
+          "arrows": false,
+          "style": "Line"
+        },
+        "Drive to second Trajectory": {
+          "arrows": false,
+          "style": "Line"
+        },
+        "Drive to third Trajectory": {
+          "style": "Line"
+        },
+        "Preload": {
+          "arrows": false,
+          "style": "Line"
+        },
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
